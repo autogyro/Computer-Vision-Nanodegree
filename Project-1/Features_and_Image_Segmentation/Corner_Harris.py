@@ -15,7 +15,7 @@ dst = cv2.cornerHarris(gray,2,3,0.04)
 # Dilate corner image to enhance corner points
 dst = cv2.dilate(dst,None)
 
-threshold = 0.01*dst.max()
+threshold = 0.0inCo1*dst.max()
 
 corner_image = np.copy(image)
 for i in range(0,dst.shape[0]):
