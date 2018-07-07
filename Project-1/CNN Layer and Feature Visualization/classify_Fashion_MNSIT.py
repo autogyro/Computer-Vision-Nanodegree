@@ -26,11 +26,11 @@ dataiter = iter(train_loader)
 images, labels = dataiter.next()
 images = images.numpy()
 
-#fig = plt.figure(figsize=(25,4))
-#for idx in np.arange(batch_size):
-#    ax = fig.add_subplot(2, batch_size/2, idx+1, xticks=[], yticks=[])
-#    ax.imshow(np.squeeze(images[idx]), cmap='gray')
-#    ax.set_title(classes[labels[idx]])
+fig = plt.figure(figsize=(25,4))
+for idx in np.arange(batch_size):
+    ax = fig.add_subplot(2, batch_size/2, idx+1, xticks=[], yticks=[])
+    ax.imshow(np.squeeze(images[idx]), cmap='gray')
+    ax.set_title(classes[labels[idx]])
     
 #Defining Neural Network layers
 import torch.nn as nn
@@ -128,7 +128,7 @@ def train(n_epochs):
     print('Finished Traning')
     return loss_over_time
 
-n_epochs = 6
+n_epochs = 10
 training_loss = train(n_epochs)
 
 # visualize the loss as the network trained
@@ -177,3 +177,40 @@ for i in range(10):
 print('\nTest Accuracy (Overall): %2d%% (%2d/%2d)'%(
         100. * np.sum(class_correct)/np.sum(class_total),
         np.sum(class_correct), np.sum(class_total)))
+
+#Visualize sample test results
+dataiter = iter(test_loader)
+images, labels = dataiter.next()
+
+preds = np.squeeze(net(images).data.max(1, keepdim=True)[1].numpy())
+images = images.numpy()
+
+fig = plt.figure(figsize=(25,4))
+for idx in np.arange(batch_size):
+    ax = fig.add_subplot(2, batch_size/2, idx+1, xticks=[], yticks=[])
+    ax.imshow(np.squeeze(images[idx]), cmap='gray')
+    ax.set_title("{} ({})".format(classes[preds[idx]], classes[labels[idx]]),
+                 color=("green" if preds[idx]==labels[idx] else "red"))
+    
+#Saving the model
+model_dir = 'saved_models/'
+model_name = 'fashion_net_ex.pt'
+
+import os
+if not os.path.isdir(model_dir):
+    os.mkdir(model_dir)
+
+torch.save(net.state_dict(), model_dir+model_name)
+
+
+##Load a trained, saved model
+#instantiate our Net
+#this refers to out Net class defined above
+net = Net()
+net.load_state_dict(torch.load('saved_models/fashion_net_ex.pt'))
+print(net)
+
+
+x1 = torch.zeros((10,10))
+x1 = x1.unsqueeze(1).unsqueeze(0)
+print(x1.shape)
