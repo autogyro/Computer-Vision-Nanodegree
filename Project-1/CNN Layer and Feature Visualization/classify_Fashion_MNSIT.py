@@ -128,7 +128,7 @@ def train(n_epochs):
     print('Finished Traning')
     return loss_over_time
 
-n_epochs = 10
+n_epochs = 3
 training_loss = train(n_epochs)
 
 # visualize the loss as the network trained
@@ -209,8 +209,3 @@ torch.save(net.state_dict(), model_dir+model_name)
 net = Net()
 net.load_state_dict(torch.load('saved_models/fashion_net_ex.pt'))
 print(net)
-
-
-x1 = torch.zeros((10,10))
-x1 = x1.unsqueeze(1).unsqueeze(0)
-print(x1.shape)
